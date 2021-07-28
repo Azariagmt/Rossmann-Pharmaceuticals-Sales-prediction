@@ -42,8 +42,6 @@ if __name__ == "__main__":
         '../rossmann-store-sales/train_store.csv', parse_dates=True, index_col=0)
     mlflow.log_param('train_store_data_url', data_url)
     mlflow.log_param('data_version', version)
-    mlflow.log_param('input_rows', train_store.shape[0])
-    mlflow.log_param('input_cols', train_store.shape[1])
     mlflow.log_param('model_type', 'Random Forest')
 
     test = pd.read_csv('../rossmann-store-sales/test.csv',
@@ -80,6 +78,8 @@ if __name__ == "__main__":
     X_train, X_train_test, y_train, y_train_test = model_selection.train_test_split(
         features_df, targets, test_size=0.20, random_state=15)
     print("Training and testing split was successful.")
+    mlflow.log_param('input_rows', X_train.shape[0])
+    mlflow.log_param('input_cols', X_train.shape[1])
 
     rfr = RandomForestRegressor(n_estimators=10,
                                 criterion='mse',
