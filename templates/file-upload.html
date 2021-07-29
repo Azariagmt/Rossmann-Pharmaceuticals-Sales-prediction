@@ -1,15 +1,47 @@
-<form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
-    <div id="drop">
-        Drop Here
+<!DOCTYPE html>
+<html lang="en">
 
-        <a>Browse</a>
-        <input type="file" name="upl" multiple />
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link href="{{url_for('static', filename='css/file-upload.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div>
+        <form id="upload-file" method="post" enctype="multipart/form-data">
+            <label for="imageUpload" class="upload-label">
+                Choose...
+            </label>
+            <input type="file" name="file" id="imageUpload" accept=".csv, .xlsx">
+        </form>
+
+        <div class="image-section" style="display:none;">
+            <div class="img-preview">
+                <div id="imagePreview">
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary btn-lg " id="btn-predict">Predict!</button>
+            </div>
+        </div>
+
+        <div class="loader" style="display:none;"></div>
+
+        <h3 id="result">
+            <span> </span>
+        </h3>
+
     </div>
+</body>
 
-    <ul>
-        <!-- The file uploads will be shown here -->
-    </ul>
+<script src="{{ url_for('static', filename='js/file-upload.js') }}" type="text/javascript"></script>
 
-</form>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</html>
