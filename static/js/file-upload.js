@@ -49,7 +49,22 @@ $(document).ready(function () {
         $(".loader").hide();
         $("#result").fadeIn(600);
         console.log("data:", data);
-        $("#result").text(" Result:  " + data);
+        // $("#result").text(" Result:  " + data);
+        var trace1 = {
+          x: data.x,
+          y: data.y,
+          type: "scatter",
+        };
+
+        var trace2 = {
+          x: data.x,
+          y: [16, 5, 11, 9],
+          type: "scatter",
+        };
+
+        var data = [trace1, trace2];
+
+        Plotly.newPlot("result", data);
         console.log("Success!");
       },
     });
