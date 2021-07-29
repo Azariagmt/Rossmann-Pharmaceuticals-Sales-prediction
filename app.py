@@ -57,7 +57,11 @@ def upload():
         # os.mkdir('./uploads/zz')
 
     # TODO: should return prediction data points
-    return 'In progress'
+    data = {
+        "x": ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
+        "y": [23, 44, 55, 77, 55, 62]
+    }
+    return data
 
 
 @app.route('/analysis')
