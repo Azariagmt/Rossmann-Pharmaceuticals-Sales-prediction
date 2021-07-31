@@ -21,16 +21,4 @@ jobs:
           echo "## Random Forest Metric" >> report.md  
           cat rf_metrics.txt >> report.md
 
-
-          # python xgb.py
-          # echo "## XGBClassifier Metrics" >> report.md  
-          # cat xgb_metrics.txt >> report.md
-          # cml-publish xgb_confusion_matrix.png --md >> report.md
-
-          # python logistic_regression.py
-          # echo "## Logistic Regression Metrics" >> report.md  
-          # cat lr_metrics.txt >> report.md
-          # cml-publish lr_confusion_matrix.png --md >> report.md
-
-
           cml-send-comment report.md
