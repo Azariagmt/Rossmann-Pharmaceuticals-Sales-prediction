@@ -1,4 +1,7 @@
 
+from logs import log
+from preprocess import preprocess
+from loss import rmspe
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import *
@@ -14,9 +17,6 @@ import sys
 import os
 import logging
 sys.path.insert(0, '../modules')
-from loss import rmspe
-from preprocess import preprocess
-from logs import log
 # configures logger
 logger = log(path="../logs/", file="rfr.logs")
 logger.info("Starts RFR")
@@ -79,3 +79,5 @@ if __name__ == "__main__":
     error = rmspe(y_train_test, yhat)
     logger.info(f"error{str(error)}")
     mlflow.log_param('error', error)
+    with open("rf_metrics.txt", 'w') as outfile:
+        outfile.write("Accuracy: " + str(acc) + "\n")
