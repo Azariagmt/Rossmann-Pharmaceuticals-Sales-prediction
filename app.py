@@ -1,6 +1,15 @@
 from flask import Flask, request, render_template
 from werkzeug.exceptions import Forbidden, HTTPException, NotFound, RequestTimeout, Unauthorized
+from werkzeug.utils import secure_filename
 import os
+# TODO: refactor into own preprocess component
+import pandas as pd
+import numpy as np
+# from modules import predict
+import sys
+import pickle
+# sys.path.insert(0, '../modules')
+from modules import predict
 app = Flask(__name__)
 
 
@@ -27,6 +36,69 @@ def forbidden_handler(e: HTTPException):
 @app.errorhandler(RequestTimeout)
 def request_timeout_handler(e: HTTPException):
     return '<h1>408.html</h1>', 408
+
+
+FEATURES = ['Store', 'DayOfWeek', 'Open', 'Promo', 'StateHoliday',
+            'SchoolHoliday', 'Year', 'Month', 'Day', 'WeekOfYear']
+
+
+def make_prediction(df):
+    loaded_model = pickle.load(open("./models/model.pkl", 'rb'))
+    df = df[FEATURES]
+    result = loaded_model.predict(df)
+    print("RESULT:", np.exp(result))
+    return np.exp(result)
+
+
+@app.route('/predict', methods=['GET', 'POST'])
+def upload():
+    global class_names
+    if request.method == 'POST':
+        # Get the file from post request
+        f = request.files['file']
+
+        # Save the file to ./uploads
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.join(
+            basepath, 'uploads/', secure_filename(f.filename))
+        f.save(file_path)
+        print(f)
+        df = pd.read_csv(file_path, parse_dates=True, index_col="Date")
+        df['Year'] = df.index.year
+        df['Month'] = df.index.month
+        df['Day'] = df.index.day
+        df['WeekOfYear'] = df.index.weekofyear
+        print(df.head())
+        print("Index", df.index)
+        # TODO: feed into sklearn pipeline
+        # TODO: make prediction
+
+    results = make_prediction(df)
+    dates = df.index.values
+    dates = dates.astype(str).tolist()
+    # TODO: should return prediction data points
+    data = {
+        "x": dates,
+        "y": list(results)
+    }
+    return data
+
+    # TODO: send prediction output back
+
+    # Make prediction
+    # shutil.rmtree('./uploads/zz')
+    # os.mkdir('./uploads/zz')
+
+
+@app.route('/prediction')
+def predict():
+    return render_template('file-upload.html')
+
+@app.route('/analysis')
+def analysis():
+    return "Power BI dashboard goes here"
+# TODO: refactor analysis route to prediction
+# TODO: add analysis route.... analysis for existing data using powerbi
 
 
 if __name__ == '__main__':
