@@ -1,7 +1,10 @@
+
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import *
 import logging
+import numpy as np 
+import pandas as pd
 import dvc.api
 import mlflow
 import mlflow.sklearn
@@ -12,7 +15,6 @@ import os
 sys.path.insert(0, '../modules')
 
 from preprocess import preprocess
-
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
@@ -57,9 +59,9 @@ if __name__ == "__main__":
     mlflow.log_param('input_rows', X_train.shape[0])
     mlflow.log_param('input_cols', X_train.shape[1])
 
-    rfr = RandomForestRegressor(n_estimators=10,
+    rfr = RandomForestRegressor(n_estimators=50,
                                 criterion='mse',
-                                max_depth=5,
+                                max_depth=10,
                                 min_samples_split=2,
                                 min_samples_leaf=1,
                                 min_weight_fraction_leaf=0.0,
@@ -75,8 +77,7 @@ if __name__ == "__main__":
                                 warm_start=False)
     rfr.fit(X_train, y_train)
 
-    filename = 'model1.sav'
-    pickle.dump(rfr, open(filename, 'wb'))
+    mlflow.sklearn.log_model(rfr, "random forest model")
 
     yhat = rfr.predict(X_train_test)
     error = rmspe(y_train_test, yhat)
