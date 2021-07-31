@@ -80,4 +80,4 @@ if __name__ == "__main__":
     logger.info(f"error{str(error)}")
     mlflow.log_param('error', error)
     with open("rf_metrics.txt", 'w') as outfile:
-        outfile.write("Accuracy: " + str(acc) + "\n")
+        outfile.write("Error(rmspe): " + str(err) + "\n")
