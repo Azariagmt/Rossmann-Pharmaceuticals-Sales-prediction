@@ -1,0 +1,8 @@
+INFO: 2021-07-31 12:59:52,925: Starts RFR
+INFO: 2021-07-31 13:02:09,472: Starts RFR
+INFO: 2021-07-31 13:02:12,802: Training and testing split was successful.
+INFO: 2021-07-31 13:02:45,141: Model fit successful
+INFO: 2021-07-31 13:10:44,277: Starts RFR
+INFO: 2021-07-31 13:11:34,107: Training and testing split was successful.
+INFO: 2021-07-31 13:12:10,028: Model fit successful
+INFO: 2021-07-31 13:12:10,540: error0.36388686068977893
