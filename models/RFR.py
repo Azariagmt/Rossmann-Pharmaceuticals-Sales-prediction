@@ -1,7 +1,3 @@
-
-from logs import log
-from preprocess import preprocess
-from loss import rmspe
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import *
@@ -18,6 +14,10 @@ import os
 import logging
 sys.path.insert(0, '../modules')
 # configures logger
+from logs import log
+from preprocess import preprocess
+from loss import rmspe
+
 logger = log(path="../logs/", file="rfr.logs")
 logger.info("Starts RFR")
 
