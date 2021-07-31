@@ -56,3 +56,20 @@ ax2.title.set_text('Time Series Plot of Min Max Scaled Sales numbers')
 ax2.grid(True)
 plt.show()
 
+fig = plt.figure()
+gs = GridSpec(2, 1, figure=fig)
+
+fig.set_figheight(10)
+fig.set_figwidth(30)
+fig.tight_layout(pad=6)
+
+ax1 = fig.add_subplot(gs[0,0])
+ax1.hist(time_series_data.Sales, density=True, bins=60)
+ax1.title.set_text('Histogram  Sales')
+ax1.grid(True)
+
+ax2 = fig.add_subplot(gs[1,0])
+ax2.hist(time_series_data.SalesScaled, density=True, bins=60)
+ax2.title.set_text('Histogram of the of Min Max Scaled  Sales')
+ax2.grid(True)
+plt.show()
