@@ -3,14 +3,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from matplotlib import ticker
-# from statsmodels.tsa.stattools import adfuller, acf, pacf
+from statsmodels.tsa.stattools import adfuller, acf, pacf
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 
-time_series_data = pd.read_csv('../rossmann-store-sales/train.csv',
+time_series_data = pd.read_csv('../rossmann-store-sales/train_sales.csv',
                                index_col="Date", parse_dates=True)
 time_series_data = time_series_data['Sales']
 time_series_data = pd.DataFrame({
@@ -73,3 +73,7 @@ ax2.hist(time_series_data.SalesScaled, density=True, bins=60)
 ax2.title.set_text('Histogram of the of Min Max Scaled  Sales')
 ax2.grid(True)
 plt.show()
+
+adfResult = adfuller(time_series_data.Sales.values, autolag='AIC')
+print(f'ADF Statistic: {adfResult[0]}')
+print(f'p-value: {adfResult[1]}')
