@@ -1,3 +1,4 @@
+
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import *
@@ -13,9 +14,9 @@ import sys
 import os
 import logging
 sys.path.insert(0, '../modules')
-
-from logs import log
+from loss import rmspe
 from preprocess import preprocess
+from logs import log
 # configures logger
 logger = log(path="../logs/", file="rfr.logs")
 logger.info("Starts RFR")
@@ -35,13 +36,6 @@ mlflow.set_experiment('Rossmann Pharmaceuticals sales price prediction')
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(50)
-
-    def rmspe(y, yhat):
-        '''
-        Loss function for model evaluation
-        '''
-        rmspe = np.sqrt(np.mean((y - yhat)**2))
-        return rmspe
 
     train_store = pd.read_csv(
         '../rossmann-store-sales/train_store.csv', parse_dates=True, index_col=0)
@@ -76,6 +70,7 @@ if __name__ == "__main__":
                                 random_state=31,
                                 verbose=0,
                                 warm_start=False)
+
     rfr.fit(X_train, y_train)
     logger.info("Model fit successful")
     mlflow.sklearn.log_model(rfr, "random forest model")
