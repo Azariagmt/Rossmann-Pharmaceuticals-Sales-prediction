@@ -68,6 +68,8 @@ def upload():
 def predict():
     return render_template('file-upload.html')
 
+# TODO: refactor analysis route to prediction
+# TODO: add analysis route.... analysis for existing data using powerbi
 
 if __name__ == '__main__':
     os.environ.setdefault('Flask_SETTINGS_MODULE', 'helloworld.settings')
