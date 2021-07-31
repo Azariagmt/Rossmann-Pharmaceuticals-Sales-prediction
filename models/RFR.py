@@ -1,9 +1,8 @@
-
 import pickle
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import *
 import logging
-import numpy as np 
+import numpy as np
 import pandas as pd
 import dvc.api
 import mlflow
@@ -12,12 +11,14 @@ import warnings
 import sys
 # insert at 1, 0 is the script path (or '' in REPL)
 import os
+import logging
 sys.path.insert(0, '../modules')
 
+from logs import log
 from preprocess import preprocess
-logging.basicConfig(level=logging.WARN)
-logger = logging.getLogger(__name__)
-
+# configures logger
+logger = log(path="../logs/", file="rfr.logs")
+logger.info("Starts RFR")
 
 train_store_path = 'rossmann-store-sales/train_store.csv'
 repo = "../"
@@ -55,7 +56,7 @@ if __name__ == "__main__":
     features_df, targets = preprocess(train_store, test)
     X_train, X_train_test, y_train, y_train_test = model_selection.train_test_split(
         features_df, targets, test_size=0.20, random_state=15)
-    print("Training and testing split was successful.")
+    logger.info("Training and testing split was successful.")
     mlflow.log_param('input_rows', X_train.shape[0])
     mlflow.log_param('input_cols', X_train.shape[1])
 
@@ -76,10 +77,10 @@ if __name__ == "__main__":
                                 verbose=0,
                                 warm_start=False)
     rfr.fit(X_train, y_train)
-
+    logger.info("Model fit successful")
     mlflow.sklearn.log_model(rfr, "random forest model")
 
     yhat = rfr.predict(X_train_test)
     error = rmspe(y_train_test, yhat)
-    print(error)
+    logger.info(f"error{str(error)}")
     mlflow.log_param('error', error)
