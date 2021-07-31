@@ -1,15 +1,17 @@
-import logging
-import numpy as np
-import pandas as pd
-from sklearn import *
-from sklearn.ensemble import RandomForestRegressor
 import pickle
-
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import *
+import logging
 import dvc.api
 import mlflow
 import mlflow.sklearn
-import logging
 import warnings
+import sys
+# insert at 1, 0 is the script path (or '' in REPL)
+import os
+sys.path.insert(0, '../modules')
+
+from preprocess import preprocess
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -19,7 +21,7 @@ train_store_path = 'rossmann-store-sales/train_store.csv'
 repo = "../"
 version = "'trainstorev1'"
 
-data_url = dvc.api.get_url(
+train_store_url = dvc.api.get_url(
     path=train_store_path,
     repo=repo
 )
@@ -30,7 +32,7 @@ mlflow.set_experiment('Rossmann Pharmaceuticals sales price prediction')
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(50)
-    
+
     def rmspe(y, yhat):
         '''
         Loss function for model evaluation
@@ -40,41 +42,15 @@ if __name__ == "__main__":
 
     train_store = pd.read_csv(
         '../rossmann-store-sales/train_store.csv', parse_dates=True, index_col=0)
-    mlflow.log_param('train_store_data_url', data_url)
+    mlflow.log_param('train_store_data_url', train_store_url)
     mlflow.log_param('data_version', version)
     mlflow.log_param('model_type', 'Random Forest')
 
     test = pd.read_csv('../rossmann-store-sales/test.csv',
                        index_col="Date", parse_dates=True)
 
-    # since competition open since have similar meanings we can merge into once
-    train_store['CompetitionOpenSince'] = np.where((train_store['CompetitionOpenSinceMonth'] == 0) & (train_store['CompetitionOpenSinceYear'] == 0), 0, (train_store.Month - train_store.CompetitionOpenSinceMonth) +
-                                                   (12 * (train_store.Year - train_store.CompetitionOpenSinceYear)))
-
-    # we can get rid of `CompetitionOpenSinceYear` and `CompeitionOpenSinceMonth`
-    del train_store['CompetitionOpenSinceYear']
-    del train_store['CompetitionOpenSinceMonth']
-
-    # data extraction
-    # TODO: extract to sklearn pipelines
-    test['Year'] = test.index.year
-    test['Month'] = test.index.month
-    test['Day'] = test.index.day
-    test['WeekOfYear'] = test.index.weekofyear
-
-    print(train_store.dtypes)
-    # print(train_store[train_store['StateHoliday'].na()])
-    # transform stateholiday
-    train_store["StateHoliday"] = train_store['StateHoliday'].map(
-        {"0": 0, "a": 1, "b": 1, "c": 1})
-    features = test.columns.tolist()
-    features.pop(0)
-    features_df = train_store[features]
-    print(features_df.head())
-    targets = np.log(train_store.Sales)
-    print(targets)
-    # targets = float(targets)
-
+    # send to preprocess modules
+    features_df, targets = preprocess(train_store, test)
     X_train, X_train_test, y_train, y_train_test = model_selection.train_test_split(
         features_df, targets, test_size=0.20, random_state=15)
     print("Training and testing split was successful.")
