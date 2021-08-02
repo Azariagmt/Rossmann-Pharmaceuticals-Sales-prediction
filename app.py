@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 # from modules import predict
 import sys
-import pickle as pickle
+import pickle
 # sys.path.insert(0, '../modules')
 from modules import make_dirs
 from modules import predict
