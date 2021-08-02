@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 # from modules import predict
 import sys
-import pickle
+import pickle5 as pickle
 # sys.path.insert(0, '../modules')
 from modules import predict
 app = Flask(__name__)
