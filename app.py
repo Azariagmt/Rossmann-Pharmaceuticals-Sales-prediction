@@ -8,8 +8,9 @@ import pandas as pd
 import numpy as np
 # from modules import predict
 import sys
-import pickle5 as pickle
+import pickle as pickle
 # sys.path.insert(0, '../modules')
+from modules import make_dirs
 from modules import predict
 app = Flask(__name__)
 
@@ -109,6 +110,26 @@ def analysis():
     return "Power BI dashboard goes here"
 # TODO: refactor analysis route to prediction
 # TODO: add analysis route.... analysis for existing data using powerbi
+
+
+@app.before_first_request
+def make_output_dir():
+    try:
+        if not os.path.exists('./output'):
+            os.makedirs('./output')
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
+
+@app.before_first_request
+def make_uploads_dir():
+    try:
+        if not os.path.exists('./uploads'):
+            os.makedirs('./uploads')
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
 
 
 if __name__ == '__main__':
