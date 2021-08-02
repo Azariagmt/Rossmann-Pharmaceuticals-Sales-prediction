@@ -56,13 +56,7 @@ $(document).ready(function () {
           type: "scatter",
         };
 
-        var trace2 = {
-          x: data.x,
-          y: [16, 5, 11, 9],
-          type: "scatter",
-        };
-
-        var data = [trace1, trace2];
+        var data = [trace1];
 
         Plotly.newPlot("result", data);
         console.log("Success!");
