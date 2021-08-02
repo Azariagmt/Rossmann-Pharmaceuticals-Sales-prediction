@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+from flask.helpers import send_file
 from werkzeug.exceptions import Forbidden, HTTPException, NotFound, RequestTimeout, Unauthorized
 from werkzeug.utils import secure_filename
 import os
@@ -77,6 +78,9 @@ def upload():
     dates = df.index.values
     dates = dates.astype(str).tolist()
     # TODO: should return prediction data points
+    df['Sales'] = results
+    df['Sales'] = df['Sales'].astype(int)
+    df.to_csv('output/response.csv')
     data = {
         "x": dates,
         "y": list(results)
@@ -90,9 +94,15 @@ def upload():
     # os.mkdir('./uploads/zz')
 
 
+@app.route('/download')
+def download():
+    return send_file('./output/response.csv', as_attachment=True)
+
+
 @app.route('/prediction')
 def predict():
     return render_template('file-upload.html')
+
 
 @app.route('/analysis')
 def analysis():

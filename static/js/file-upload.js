@@ -60,6 +60,7 @@ $(document).ready(function () {
 
         Plotly.newPlot("result", data);
         console.log("Success!");
+        window.location.href = "/download";
       },
     });
   });
