@@ -106,7 +106,7 @@ def predict():
 
 @app.route('/analysis')
 def analysis():
-    return "Power BI dashboard goes here"
+    return render_template('dashboard.html')
 # TODO: refactor analysis route to prediction
 # TODO: add analysis route.... analysis for existing data using powerbi
 
